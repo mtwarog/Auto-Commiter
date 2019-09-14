@@ -1,5 +1,5 @@
-# Copies commit files and pushes them to specified repository
-# USAGE:
+# Deletes specified files, copies commit files and pushes them to specified repository
+# USAGE: ./push_commit TO_BE_COMMITED_DIR LOG_FILE currentDate commit_id
 
 TO_BE_COMMITED_DIR=$1
 LOG_FILE=$2
@@ -28,6 +28,13 @@ cd $repositoryDir
 git checkout $branchName
 # pull latest changes
 git pull $remoteName $branchName
+# delete specified files 
+DELETE_FILE=$currentCommitDir/files_to_delete.txt
+if [ -f "$DELETE_FILE" ]; then
+	while read fileToDelete; do
+		rm fileToDelete
+	done < $currentCommitDir/files_to_delete.txt # this file must contain paths to files relative to main directory of repository
+fi
 # copy files to commit
 cp -r $currentCommitDir/commit/* ./
 # set username and email for commit
